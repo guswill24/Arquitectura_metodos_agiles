@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { SectionWrapper } from "../SectionWrapper";
 import { PdfViewer } from "@/components/ui/PdfViewer";
-import { useScrumStore } from "@/lib/store/scrum-store";
-import { useSoundEffects } from "@/lib/hooks/useSoundEffects";
 
 interface Ceremony {
   n: number;
@@ -19,7 +17,6 @@ type TimelineItemProps = {
   ceremony: Ceremony;
   expanded: boolean;
   onToggle: () => void;
-  phaseColor: string;
 };
 
 const CEREMONIES: Ceremony[] = [
@@ -138,32 +135,8 @@ Login → 3 puntos`,
   },
 ];
 
-const SPRINT_CERS = CEREMONIES.filter((c) => c.phase === "sprint");
-
-function shuffle<T>(arr: T[]): T[] {
-  return [...arr].sort(() => Math.random() - 0.5);
-}
-
 export function Section4Process() {
-  const { addXP, unlockBadge } = useScrumStore();
-  const { play } = useSoundEffects();
-
   const [expandedCeremony, setExpandedCeremony] = useState<number | null>(null);
-  const [simItems] = useState<Ceremony[]>(() => shuffle(SPRINT_CERS));
-  const [selected, setSelected] = useState<number[]>([]);
-  const [simChecked, setSimChecked] = useState(false);
-
-  function selectCeremony(n: number) {
-    if (simChecked) return;
-    setSelected((s) =>
-      s.includes(n) ? s.filter((x) => x !== n) : [...s, n]
-    );
-  }
-
-  function resetSim() {
-    setSelected([]);
-    setSimChecked(false);
-  }
 
   return (<SectionWrapper
     sectionNumber={4}
@@ -176,6 +149,7 @@ export function Section4Process() {
       <h2 style={{ fontSize: 22, fontWeight: 700 }}>
         Las 12 Ceremonias — Flujo del Proceso </h2>
 
+
       <div>
         {CEREMONIES.map((c) => (
           <TimelineItem
@@ -187,7 +161,6 @@ export function Section4Process() {
                 expandedCeremony === c.n ? null : c.n
               )
             }
-            phaseColor="#00B4D8"
           />
         ))}
       </div>
@@ -201,12 +174,11 @@ export function Section4Process() {
   );
 }
 
-// 🔥 COMPONENTE TIPADO Y CORREGIDO
+// 🔥 COMPONENTE LIMPIO
 function TimelineItem({
   ceremony,
   expanded,
   onToggle,
-  phaseColor,
 }: TimelineItemProps) {
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
@@ -214,10 +186,14 @@ function TimelineItem({
 
   useEffect(() => {
     if (!running || seconds <= 0) return;
+
+
     const interval = setInterval(() => {
       setSeconds((s) => s - 1);
     }, 1000);
-    return () => clearInterval(interval);
+
+
+
   }, [running, seconds]);
 
   useEffect(() => {
@@ -240,12 +216,7 @@ function TimelineItem({
   }
 
   return (
-    <div
-      style={{
-        border: "1px solid var(--sl-border)",
-        marginBottom: 10,
-      }}
-    >
+    <div style={{ border: "1px solid var(--sl-border)", marginBottom: 10 }}>
       <button onClick={onToggle} style={{ width: "100%", padding: 12 }}>
         {ceremony.n}. {ceremony.icon} {ceremony.name} </button>
 
