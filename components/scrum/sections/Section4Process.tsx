@@ -47,7 +47,7 @@ Login → 3 puntos` },
 
   {
     n: 5, icon: "📅", phase: "pre", name: "Planeación de entregas",
-    detail: `Definir sprints.`
+    detail: `Definir sprints. Se define cantidad de sprints, duración, costo estimado y distribución de historias por sprint.`
   },
 
   {
