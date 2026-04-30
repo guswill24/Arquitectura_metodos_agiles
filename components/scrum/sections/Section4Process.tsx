@@ -188,11 +188,6 @@ function TimelineItem({
     if (!running || seconds <= 0) return;
 
 
-    const interval = setInterval(() => {
-      setSeconds((s) => s - 1);
-    }, 1000);
-
-
 
   }, [running, seconds]);
 
